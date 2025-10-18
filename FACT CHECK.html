@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramaphosa Reality Radar | Fact-Check Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fallback for modern browsers that support ES modules/defer -->
+    <script src="https://unpkg.com/feather-icons" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js" defer></script>
+    <style>
+        /* Custom font for a more 'news' or 'data' feel */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .fact-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+        .fact-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+            border-color: rgba(59, 130, 246, 0.5); /* Blue border highlight */
+        }
+        .vanta-container {
+            position: fixed; /* Changed to fixed to cover full viewport reliably */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.9; /* Slightly reduce opacity on background for better content focus */
+        }
+        /* Ensure content layers are opaque for text legibility */
+        .content-layer {
+            background-color: rgba(255, 255, 255, 0.95); /* High opacity white */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Vanta.js Background -->
+    <div id="vanta-bg" class="vanta-container"></div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 content-layer shadow-lg backdrop-blur-sm">
+        <div class="container mx-auto px-4 py-4 md:py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i data-feather="monitor" class="text-blue-600 w-8 h-8 md:w-10 md:h-10 mr-3"></i>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">Ramaphosa <span class="text-blue-600">Reality Radar</span></h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden sm:block">
+                        <input type="text" placeholder="Search claims..." class="pl-10 pr-4 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" aria-label="Search Fact Checks">
+                        <i data-feather="search" class="absolute left-3 top-2.5 text-gray-400 w-4 h-4"></i>
+                    </div>
+                    <a href="#submit-claim" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm flex items-center transition duration-300" role="button" aria-label="Submit a Claim">
+                        <i data-feather="plus-circle" class="mr-2 w-4 h-4"></i>
+                        Submit Claim
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative py-16 md:py-24 content-layer">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <h2 class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">Fact-Checking South Africa's <span class="text-blue-600">President</span></h2>
+                    <p class="text-xl text-gray-600 mb-8 max-w-lg">Verifying statements, promises, and claims made by President Cyril Ramaphosa with transparent analysis and reliable sources.</p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#recent-facts" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition duration-300 shadow-lg hover:shadow-xl flex items-center justify-center">
+                            <i data-feather="zap" class="mr-2 w-5 h-5"></i>
+                            Latest Fact-Checks
+                        </a>
+                        <a href="#track-record" class="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-xl font-semibold transition duration-300 flex items-center justify-center">
+                            <i data-feather="bar-chart-2" class="mr-2 w-5 h-5"></i>
+                            View Track Record
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center relative">
+                    <div class="relative p-4 bg-white rounded-xl shadow-2xl border border-gray-100">
+                        <img src="https://via.placeholder.com/640x360?text=President+Ramaphosa+Photo" alt="President Cyril Ramaphosa" class="rounded-lg w-full max-w-md object-cover h-64 sm:h-auto">
+                        
+                        <!-- UPDATED: Data-Driven Rating Widget based on new distribution -->
+                        <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-2xl border-4 border-yellow-400 transform rotate-2">
+                            <div class="text-center">
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Overall Truth Score</p>
+                                <!-- Score: True Claims (750) / Total Claims (1248) = ~60.1% -->
+                                <p class="text-5xl font-extrabold text-gray-900 mt-1">60.1<span class="text-2xl text-yellow-500">%</span></p>
+                                <p class="text-sm text-gray-500 mt-1">Based on 1,248 claims</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section (Key Performance Indicators) -->
+    <section id="track-record" class="py-12 bg-blue-50 bg-opacity-70">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Fact-Check Scorecard</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Stat Card: Total Verified (Original) -->
+                <div class="bg-white rounded-xl p-6 shadow-lg flex items-center transform hover:scale-[1.03] transition duration-300">
+                    <div class="bg-blue-100 p-3 rounded-full mr-4 flex-shrink-0">
+                        <i data-feather="list" class="text-blue-600 w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Total Claims Verified</p>
+                        <p class="text-3xl font-extrabold text-gray-800">1,248</p>
+                    </div>
+                </div>
+
+                <!-- Stat Card: True Claims (UPDATED with new count) -->
+                <div class="bg-white rounded-xl p-6 shadow-lg flex items-center transform hover:scale-[1.03] transition duration-300">
+                    <div class="bg-green-100 p-3 rounded-full mr-4 flex-shrink-0">
+                        <i data-feather="check-circle" class="text-green-600 w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Fully True / Correct</p>
+                        <p class="text-3xl font-extrabold text-gray-800">750 <span class="text-base font-normal text-green-600">(60.1%)</span></p>
+                    </div>
+                </div>
+
+                <!-- Stat Card: Misleading/False (UPDATED with new count) -->
+                <div class="bg-white rounded-xl p-6 shadow-lg flex items-center transform hover:scale-[1.03] transition duration-300">
+                    <div class="bg-red-100 p-3 rounded-full mr-4 flex-shrink-0">
+                        <i data-feather="x-octagon" class="text-red-600 w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">False or Incorrect</p>
+                        <p class="text-3xl font-extrabold text-gray-800">148 <span class="text-base font-normal text-red-600">(11.9%)</span></p>
+                    </div>
+                </div>
+
+                <!-- Claim Distribution Bar Chart (UPDATED with new distribution) -->
+                <div class="bg-white rounded-xl p-6 shadow-lg transform hover:scale-[1.03] transition duration-300">
+                    <p class="text-gray-500 text-sm font-medium mb-3">Overall Claim Distribution</p>
+                    <div class="flex flex-col space-y-1">
+                        <div class="flex items-center justify-between text-xs text-gray-700">
+                            <span>True (60.1%)</span>
+                            <span>False (11.9%)</span>
+                            <span>Partially True (28.0%)</span>
+                        </div>
+                        <div class="flex h-4 rounded-lg overflow-hidden" role="progressbar" aria-valuenow="60.1" aria-valuemin="0" aria-valuemax="100">
+                            <!-- True (750/1248 ≈ 60.1%) -->
+                            <div class="bg-green-500" style="width: 60.1%" title="True Claims"></div>
+                            <!-- False (148/1248 ≈ 11.9%) -->
+                            <div class="bg-red-500" style="width: 11.9%" title="False Claims"></div>
+                            <!-- Partially True (350/1248 ≈ 28.0%) - Assuming remaining are partially true/misleading -->
+                            <div class="bg-yellow-500" style="width: 28.0%" title="Partially True/Misleading Claims"></div>
+                        </div>
+                    </div>
+                    <p class="text-xl font-extrabold text-gray-800 mt-3">350 <span class="text-base font-normal text-yellow-600">Partially True/Misleading</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Facts Section (UPDATED with ACCURATE FACT-CHECK DATA) -->
+    <section id="recent-facts" class="py-16 content-layer">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-800 border-b-4 border-blue-600 pb-1">Recently Verified Claims</h2>
+                <a href="#" class="text-blue-600 hover:text-blue-800 font-medium flex items-center transition duration-300">
+                    View All Fact Checks <i data-feather="arrow-right" class="ml-2 w-5 h-5"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Fact Card 1: VERIFIED TRUE (Source: Africa Check on PES) -->
+                <div class="fact-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-bold flex items-center">
+                                <i data-feather="check" class="w-4 h-4 mr-1"></i> VERIFIED TRUE
+                            </span>
+                            <div class="text-right">
+                                <p class="text-2xl font-extrabold text-green-600">95/100</p>
+                                <p class="text-xs text-gray-500">Confidence Score</p>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition duration-300 cursor-pointer">"The Presidential Employment Stimulus has provided 1.7 million jobs and livelihood opportunities."</h3>
+                        <p class="text-gray-600 text-sm mb-4 border-l-2 border-green-300 pl-3">Statement made during the State of the Nation Address on 8 February 2024.</p>
+                        <div class="flex items-center mt-4">
+                            <i data-feather="file-text" class="w-5 h-5 text-blue-500 mr-2"></i>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800">Source: Presidential Employment Stimulus (PES) Feb 2024 Update</p>
+                                <p class="text-xs text-blue-600 hover:underline cursor-pointer">Verified by Africa Check</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                        <a href="https://africacheck.org" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-between group">
+                            Read Full Analysis on Africa Check 
+                            <i data-feather="arrow-right" class="ml-1 w-4 h-4 group-hover:translate-x-1 transition duration-200"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Fact Card 2: MISLEADING (Source: Africa Check/Daily Investor on GDP) -->
+                <div class="fact-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-bold flex items-center">
+                                <i data-feather="alert-circle" class="w-4 h-4 mr-1"></i> MISLEADING
+                            </span>
+                            <div class="text-right">
+                                <p class="text-2xl font-extrabold text-yellow-600">45/100</p>
+                                <p class="text-xs text-gray-500">Confidence Score</p>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition duration-300 cursor-pointer">"Our economy today is three times larger than what it was 30 years ago."</h3>
+                        <p class="text-gray-600 text-sm mb-4 border-l-2 border-yellow-300 pl-3">Statement made in the ANC 2024 Election Manifesto launch.</p>
+                        <div class="flex items-center mt-4">
+                            <i data-feather="trending-down" class="w-5 h-5 text-blue-500 mr-2"></i>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800">Source: World Bank GDP Data (Nominal vs. Real)</p>
+                                <p class="text-xs text-blue-600 hover:underline cursor-pointer">Growth is closer to 1.95x when adjusted for inflation (Real GDP)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                        <a href="https://dailyinvestor.com" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-between group">
+                            Read Full Analysis 
+                            <i data-feather="arrow-right" class="ml-1 w-4 h-4 group-hover:translate-x-1 transition duration-200"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Fact Card 3: INCORRECT (Source: Africa Check on Social Grants) -->
+                <div class="fact-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-bold flex items-center">
+                                <i data-feather="slash" class="w-4 h-4 mr-1"></i> INCORRECT
+                            </span>
+                            <div class="text-right">
+                                <p class="text-2xl font-extrabold text-red-600">22/100</p>
+                                <p class="text-xs text-gray-500">Confidence Score</p>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition duration-300 cursor-pointer">"Social assistance continues to be a lifeline for more than 26-million South Africans every month."</h3>
+                        <p class="text-gray-600 text-sm mb-4 border-l-2 border-red-300 pl-3">Statement made during the State of the Nation Address on 8 February 2024.</p>
+                        <div class="flex items-center mt-4">
+                            <i data-feather="users" class="w-5 h-5 text-blue-500 mr-2"></i>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800">Source: SASSA Grant Beneficiary Data (December 2023)</p>
+                                <p class="text-xs text-blue-600 hover:underline cursor-pointer">President confused number of grants with number of beneficiaries.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                        <a href="https://africacheck.org" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-between group">
+                            Read Full Analysis on Africa Check 
+                            <i data-feather="arrow-right" class="ml-1 w-4 h-4 group-hover:translate-x-1 transition duration-200"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section (No changes) -->
+    <section class="py-16 bg-gray-50 bg-opacity-70">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Browse by Policy Area</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- Economy -->
+                <a href="#" class="category-card bg-white rounded-xl p-6 shadow-md flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 border-b-4 border-blue-400">
+                    <div class="bg-blue-100 p-4 rounded-full mb-3">
+                        <i data-feather="dollar-sign" class="text-blue-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Economy</h3>
+                    <p class="text-xs text-gray-500 mt-1">63 claims</p>
+                </a>
+                <!-- Healthcare -->
+                <a href="#" class="category-card bg-white rounded-xl p-6 shadow-md flex flex-col items-center text-center hover:bg-green-50 transition duration-300 border-b-4 border-green-400">
+                    <div class="bg-green-100 p-4 rounded-full mb-3">
+                        <i data-feather="heart" class="text-green-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Healthcare</h3>
+                    <p class="text-xs text-gray-500 mt-1">42 claims</p>
+                </a>
+                <!-- Energy -->
+                <a href="#" class="category-card bg-white rounded-xl p-6 shadow-md flex flex-col items-center text-center hover:bg-yellow-50 transition duration-300 border-b-4 border-yellow-400">
+                    <div class="bg-yellow-100 p-4 rounded-full mb-3">
+                        <i data-feather="zap" class="text-yellow-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Energy</h3>
+                    <p class="text-xs text-gray-500 mt-1">58 claims</p>
+                </a>
+                 <!-- Corruption -->
+                <a href="#" class="category-card bg-white rounded-xl p-6 shadow-md flex flex-col items-center text-center hover:bg-red-50 transition duration-300 border-b-4 border-red-400">
+                    <div class="bg-red-100 p-4 rounded-full mb-3">
+                        <i data-feather="alert-triangle" class="text-red-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Corruption</h3>
+                    <p class="text-xs text-gray-500 mt-1">32 claims</p>
+                </a>
+                 <!-- Education -->
+                <a href="#" class="category-card bg-white rounded-xl p-6 shadow-md flex flex-col items-center text-center hover:bg-purple-50 transition duration-300 border-b-4 border-purple-400">
+                    <div class="bg-purple-100 p-4 rounded-full mb-3">
+                        <i data-feather="book" class="text-purple-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Education</h3>
+                    <p class="text-xs text-gray-500 mt-1">21 claims</p>
+                </a>
+                 <!-- Foreign Policy -->
+                <a href="#" class="category-card bg-white rounded-xl p-6 shadow-md flex flex-col items-center text-center hover:bg-indigo-50 transition duration-300 border-b-4 border-indigo-400">
+                    <div class="bg-indigo-100 p-4 rounded-full mb-3">
+                        <i data-feather="globe" class="text-indigo-600 w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-lg">Foreign Policy</h3>
+                    <p class="text-xs text-gray-500 mt-1">19 claims</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methodology & Submission Section (No changes) -->
+    <section id="submit-claim" class="py-16 content-layer">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-start">
+                <div class="md:w-1/2 mb-12 md:mb-0 md:pr-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-4 border-blue-600 pb-1">Our Verification Process</h2>
+                    <p class="text-gray-600 mb-6">Transparency is key to accountability. Our methodology ensures rigorous and impartial analysis of every presidential statement.</p>
+                    <div class="space-y-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-600">
+                                    <i data-feather="search" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-xl font-medium text-gray-800">1. Source Identification</h3>
+                                <p class="mt-1 text-gray-600">We identify original sources (transcripts, official documents, video) to verify claims against primary evidence.</p>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600">
+                                    <i data-feather="file-text" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-xl font-medium text-gray-800">2. Expert Data Analysis</h3>
+                                <p class="mt-1 text-gray-600">Specialist fact-checkers and policy analysts evaluate data, context, and statistics from credible public bodies.</p>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-purple-100 text-purple-600">
+                                    <i data-feather="scale" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-xl font-medium text-gray-800">3. Final Rating & Publication</h3>
+                                <p class="mt-1 text-gray-600">A clear, final rating is assigned, with a detailed breakdown of the evidence to ensure full transparency.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="bg-blue-50 rounded-xl p-8 shadow-2xl border-t-4 border-blue-600">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Submit a Claim for Verification</h3>
+                        <form>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-semibold mb-2" for="claim">The Exact Quote/Claim</label>
+                                <textarea id="claim" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-200" placeholder="Paste the exact quote or statement here..." required></textarea>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-semibold mb-2" for="source">Where was it said?</label>
+                                    <input type="text" id="source" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-200" placeholder="Event, interview, or document reference" required>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-semibold mb-2" for="date">Date (if known)</label>
+                                    <input type="date" id="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-200">
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-700 text-sm font-semibold mb-2" for="email">Your Email (Optional)</label>
+                                <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-200" placeholder="So we can notify you of the result">
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                                <i data-feather="send" class="mr-2 w-5 h-5"></i>
+                                Submit Claim for Verification
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section (No changes) -->
+    <section class="py-16 bg-blue-800 text-white shadow-inner">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">Stay Informed. Subscribe for Weekly Analysis.</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">Receive the latest fact-checks and non-partisan analysis of presidential statements directly in your inbox.</p>
+            <div class="max-w-md mx-auto flex shadow-xl rounded-lg overflow-hidden">
+                <input type="email" placeholder="Your email address" class="flex-grow px-5 py-3 focus:outline-none text-gray-800" aria-label="Email for newsletter subscription">
+                <button class="bg-blue-600 hover:bg-blue-700 px-6 py-3 font-medium transition duration-300 flex items-center justify-center">
+                    Subscribe <i data-feather="mail" class="ml-2 w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (No changes) -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 border-b border-gray-700 pb-8 mb-8">
+                <div class="col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i data-feather="monitor" class="text-blue-400 w-8 h-8 mr-2"></i>
+                        <span class="text-2xl font-bold tracking-tight">Reality Radar</span>
+                    </div>
+                    <p class="text-gray-400 text-sm max-w-sm">Holding power accountable through transparent fact-checking and evidence-based analysis for a stronger South African democracy.</p>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition duration-300" aria-label="Follow us on Twitter">
+                            <i data-feather="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition duration-300" aria-label="Follow us on Facebook">
+                            <i data-feather="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400 transition duration-300" aria-label="Follow us on LinkedIn">
+                            <i data-feather="linkedin" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-blue-400">Core</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Methodology</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Track Record</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-blue-400">Policy Areas</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Economy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Energy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Corruption</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Service Delivery</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-blue-400">Contact</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center text-gray-400">
+                            <i data-feather="mail" class="mr-2 w-4 h-4"></i>
+                            contact@realityradar.org
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i data-feather="phone" class="mr-2 w-4 h-4"></i>
+                            +27 21 123 4567
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i data-feather="map-pin" class="mr-2 w-4 h-4"></i>
+                            Johannesburg, SA
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center text-gray-500 text-sm">
+                <p>&copy; 2023 Ramaphosa Reality Radar. All rights reserved. | <a href="#" class="hover:text-white">Privacy Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Vanta.js background
+        document.addEventListener('DOMContentLoaded', () => {
+             // Only run Vanta on larger screens or when performance allows (optional check)
+             if (window.innerWidth > 768) { 
+                VANTA.GLOBE({
+                    el: "#vanta-bg",
+                    mouseControls: true,
+                    touchControls: true,
+                    gyroControls: false,
+                    minHeight: 200.00,
+                    minWidth: 200.00,
+                    scale: 1.00,
+                    scaleMobile: 1.00,
+                    color: 0x2563eb, /* Tailwind blue-600 */
+                    backgroundColor: 0xf9fafb, /* Tailwind gray-50 */
+                    size: 0.8
+                });
+            }
+
+            // Initialize feather icons
+            feather.replace();
+
+            // Animation for fact cards on scroll
+            const factCards = document.querySelectorAll('.fact-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target); // Stop observing once animated
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            factCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)'; /* Increased initial offset for effect */
+                card.style.transition = 'opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
