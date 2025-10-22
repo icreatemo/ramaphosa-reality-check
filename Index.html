@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramaphosa Reality Radar | Fact-Check Dashboard</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Fact-checking President Ramaphosa's claims with transparent analysis.">
+    <meta property="og:title" content="Ramaphosa Reality Radar">
+    <meta property="og:description" content="Verifying statements, promises, and claims made by President Cyril Ramaphosa with reliable sources.">
+    <meta property="og:image" content="/ramaphosa.jpg?nf_resize=fit&w=800">
+    <meta property="og:url" content="https://ramocheck.netlify.app">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons" defer></script>
+    <!-- Vanta.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js" defer></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Tippy.js -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <!-- Algolia InstantSearch -->
+    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+    <!-- Isotope.js -->
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <!-- i18next -->
+    <script src="https://unpkg.com/i18next@23"></script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXX');
+    </script>
+    <style>
+        /* Custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap');
+        
+        :root {
+            --true-color: #4CAF50;
+            --misleading-color: #FF9800;
+            --incorrect-color: #F44336;
+            --sa-blue: #0047AB;
+            --sa-yellow: #FFC107;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .fact-card, .stat-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+        .fact-card:hover, .stat-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border-color: var(--sa-blue);
+        }
+        .vanta-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.9;
+        }
+        .content-layer {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        .high-contrast {
+            background: #000 !important;
+            color: #fff !important;
+            --true-color: #00FF00;
+            --misleading-color: #FFFF00;
+            --incorrect-color: #FF0000;
+        }
+        .high-contrast .content-layer {
+            background-color: rgba(0, 0, 0, 0.95);
+        }
+        .high-contrast a, .high-contrast p, .high-contrast span {
+            color: #fff !important;
+        }
+        .high-contrast .bg-blue-600 { background-color: #1E90FF !important; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Vanta.js Background -->
+    <div id="vanta-bg" class="vanta-container"></div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 content-layer shadow-lg backdrop-blur-sm">
+        <div class="container mx-auto px-4 py-4 md:py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i data-feather="monitor" class="text-blue-600 w-8 h-8 md:w-10 md:h-10 mr-3"></i>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">Ramaphosa <span class="text-blue-600">Reality Radar</span></h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Language Switcher -->
+                    <select id="language" class="px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="en">English</option>
+                        <option value="zu">Zulu</option>
+                    </select>
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <input type="text" id="search" placeholder="Search claims..." class="pl-10 pr-4 py-2 text-sm rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" aria-label="Search Fact Checks">
+                        <i data-feather="search" class="absolute left-3 top-2.5 text-gray-400 w-4 h-4"></i>
+                    </div>
+                    <button id="contrast-toggle" class="px-3 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-100" aria-label="Toggle high contrast mode">High Contrast</button>
+                    <a href="#submit-claim" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm flex items-center transition duration-300" role="button" aria-label="Submit a Claim">
+                        <i data-feather="plus-circle" class="mr-2 w-4 h-4"></i>
+                        <span>Submit Claim</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative py-16 md:py-24 content-layer">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2">
+                    <h2 class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">Fact-Checking South Africa's <span class="text-blue-600">President</span></h2>
+                    <p class="text-xl text-gray-600 mb-8 max-w-lg">Verifying statements, promises, and claims made by President Cyril Ramaphosa with transparent analysis and reliable sources.</p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#recent-facts" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition duration-300 shadow-lg hover:shadow-xl flex items-center justify-center">
+                            <i data-feather="zap" class="mr-2 w-5 h-5"></i>
+                            Latest Fact-Checks
+                        </a>
+                        <a href="#track-record" class="border border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-xl font-semibold transition duration-300 flex items-center justify-center">
+                            <i data-feather="bar-chart-2" class="mr-2 w-5 h-5"></i>
+                            View Track Record
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center relative">
+                    <div class="relative p-4 bg-white rounded-xl shadow-2xl border border-gray-100">
+                        <img src="https://via.placeholder.com/640x360?nf_resize=fit&w=800&text=President+Ramaphosa+Photo" alt="President Cyril Ramaphosa speaking at 2024 SONA" class="rounded-lg w-full max-w-md object-cover h-64 sm:h-auto" loading="lazy" style="border: 2px solid var(--sa-yellow);">
+                        <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-2xl border-4 border-yellow-400 transform rotate-2">
+                            <div class="text-center">
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Overall Truth Score</p>
+                                <p class="text-5xl font-extrabold text-gray-900 mt-1">60.1<span class="text-2xl text-yellow-500">%</span></p>
+                                <p class="text-sm text-gray-500 mt-1">Based on 1,248 claims</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="track-record" class="py-12 bg-blue-50 bg-opacity-70">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">Fact-Check Scorecard</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Stat Card: Total Verified -->
+                <div class="stat-card bg-white rounded-xl p-6 shadow-lg flex items-center hover:scale-105 transition duration-300" aria-label="Total Claims Verified: 1,248">
+                    <div class="bg-blue-100 p-3 rounded-full mr-4 flex-shrink-0">
+                        <i data-feather="list" class="text-blue-600 w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Total Claims Verified</p>
+                        <p class="text-3xl font-extrabold text-gray-800 total-claims">1,248</p>
+                    </div>
+                </div>
+                <!-- Stat Card: True Claims -->
+                <div class="stat-card bg-white rounded-xl p-6 shadow-lg flex items-center hover:scale-105 transition duration-300" aria-label="Fully True Claims: 750 (60.1%)">
+                    <div class="bg-green-100 p-3 rounded-full mr-4 flex-shrink-0">
+                        <i data-feather="check-circle" class="text-green-600 w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Fully True / Correct</p>
+                        <p class="text-3xl font-extrabold text-gray-800">750 <span class="text-base font-normal text-green-600 true-percentage">(60.1%)</span></p>
+                    </div>
+                </div>
+                <!-- Stat Card: False Claims -->
+                <div class="stat-card bg-white rounded-xl p-6 shadow-lg flex items-center hover:scale-105 transition duration-300" aria-label="False or Incorrect Claims: 148 (
