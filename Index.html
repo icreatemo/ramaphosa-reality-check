@@ -461,7 +461,7 @@
             // Initialize Feather Icons
             feather.replace();
 
-            // Fetch Claims from Netlify CMS and Africa Check
+            // Fetch Claims from Netlify CMS, Africa Check, and Google Fact Check
             async function loadClaims() {
                 try {
                     // Load local claims from Netlify CMS
@@ -474,21 +474,42 @@
                     const africaClaims = africaCheckData.items.slice(0, 3).map(item => ({
                         claim: item.title,
                         status: item.categories.includes('correct') ? 'True' : item.categories.includes('misleading') ? 'Misleading' : 'Incorrect',
-                        confidence: 85, // Default, as RSS lacks confidence score
+                        confidence: 85,
                         category: item.categories.includes('economy') ? 'Economy' :
                                   item.categories.includes('health') ? 'Healthcare' :
                                   item.categories.includes('energy') ? 'Energy' :
                                   item.categories.includes('corruption') ? 'Corruption' :
                                   item.categories.includes('education') ? 'Education' : 'Politics',
                         source: 'Africa Check',
-                        date: item.pubDate.split(' ')[0], // Extract date
+                        date: item.pubDate.split(' ')[0],
                         evidence: item.description.substring(0, 100) + '...',
                         link: item.link,
-                        transcript: item.description.substring(0, 200) + '...' // Partial description as transcript
+                        transcript: item.description.substring(0, 200) + '...'
                     }));
 
-                    // Combine claims
-                    const claims = [...localClaims, ...africaClaims];
+                    // Load Google Fact Check Claims
+                    async function loadGoogleFactChecks() {
+                        const apiKey = 'AIzaSyCAqnRDhzWRRjAD7ObU1XAAjq_C6-EIOhA'; // Your provided key
+                        const query = 'Ramaphosa OR "Cyril Ramaphosa" site:africacheck.org'; // Focus on Africa Check or SA claims
+                        const response = await fetch(`https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${encodeURIComponent(query)}&pageSize=5&key=${apiKey}`);
+                        if (!response.ok) throw new Error('Google Fact Check API request failed');
+                        const data = await response.json();
+                        return data.claims?.map(claim => ({
+                            claim: claim.claimReviewMarkup?.claimReviewed || claim.claimText || 'Ramaphosa-related claim',
+                            status: claim.textualRating?.toLowerCase() === 'true' ? 'True' : claim.textualRating?.toLowerCase() === 'false' ? 'Incorrect' : 'Misleading',
+                            confidence: 90,
+                            category: 'Politics',
+                            source: `Google Fact Check (via ${claim.publisher?.name || 'Unknown'})`,
+                            date: claim.claimReviewDate || new Date().toISOString().split('T')[0],
+                            evidence: claim.claimReviewBody?.value || 'Fact-check from aggregated publishers',
+                            link: claim.claimReviewUrl || claim.url,
+                            transcript: claim.claimReviewBody?.value?.substring(0, 200) || ''
+                        })) || [];
+                    }
+                    const googleClaims = await loadGoogleFactChecks();
+
+                    // Combine claims (limit to 10 for UI performance)
+                    const claims = [...localClaims, ...africaClaims, ...googleClaims].slice(0, 10);
 
                     const claimGrid = document.querySelector('.claim-grid');
                     const claim1Select = document.getElementById('claim1');
