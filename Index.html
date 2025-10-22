@@ -528,7 +528,30 @@
                             btn.textContent = details.classList.contains('hidden') ? 'Show Details' : 'Hide Details';
                         });
                     });
-                    $('.claim-grid').isotope();
+
+                    // Initialize Isotope.js
+                    const grid = new Isotope('.claim-grid', {
+                        itemSelector: '.fact-card',
+                        layoutMode: 'fitRows'
+                    });
+
+                    // Filter buttons
+                    document.querySelectorAll('button[data-filter]').forEach(button => {
+                        button.addEventListener('click', () => {
+                            const filterValue = button.getAttribute('data-filter');
+                            grid.arrange({ filter: filterValue });
+                        });
+                    });
+
+                    // Category card filters
+                    document.querySelectorAll('.category-card').forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const filterValue = card.getAttribute('data-filter');
+                            grid.arrange({ filter: filterValue });
+                        });
+                    });
+
                     // Update stats
                     const total = claims.length;
                     const trueCount = claims.filter(c => c.status === 'True').length;
@@ -550,12 +573,14 @@
                     document.querySelector('.corruption-count').textContent = `${categories['corruption'] || 0} claims`;
                     document.querySelector('.education-count').textContent = `${categories['education'] || 0} claims`;
                     document.querySelector('.foreign-policy-count').textContent = `${categories['foreign policy'] || 0} claims`;
+
                     // Update truth score
                     fetch('/.netlify/functions/calculate-scores')
                         .then(res => res.json())
                         .then(data => {
                             document.querySelector('.truth-score').innerHTML = `${data.truthScore}<span class="text-2xl text-yellow-500">%</span>`;
                         });
+
                     // Update pie chart
                     const ctx = document.getElementById('claimDistribution').getContext('2d');
                     new Chart(ctx, {
@@ -627,18 +652,6 @@
                 })
             ]);
             search.start();
-
-            // Isotope.js Filters
-            const $grid = $('.claim-grid').isotope();
-            $('button[data-filter]').on('click', function() {
-                const filterValue = $(this).attr('data-filter');
-                $grid.isotope({ filter: filterValue });
-            });
-            $('.category-card').on('click', function(e) {
-                e.preventDefault();
-                const filterValue = $(this).attr('data-filter');
-                $grid.isotope({ filter: filterValue });
-            });
 
             // i18next Multilingual
             i18next.init({
