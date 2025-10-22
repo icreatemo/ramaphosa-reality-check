@@ -1,0 +1,21 @@
+backend:
+  name: git-gateway
+  branch: main
+media_folder: static/images/uploads
+public_folder: /images/uploads
+collections:
+  - name: claims
+    label: Claims
+    folder: data/claims
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Claim", name: "claim", widget: "string", required: true }
+      - { label: "Status", name: "status", widget: "select", options: ["True", "Misleading", "Incorrect"], required: true }
+      - { label: "Confidence Score", name: "confidence", widget: "number", min: 0, max: 100, required: true }
+      - { label: "Category", name: "category", widget: "select", options: ["Economy", "Healthcare", "Energy", "Corruption", "Education", "Foreign Policy"], required: true }
+      - { label: "Source", name: "source", widget: "string", required: true }
+      - { label: "Date", name: "date", widget: "date", required: false }
+      - { label: "Transcript", name: "transcript", widget: "text", required: false }
+      - { label: "Evidence", name: "evidence", widget: "text", required: false }
+      - { label: "Related Claims", name: "related", widget: "text", required: false }

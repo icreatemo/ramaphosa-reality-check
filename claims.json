@@ -1,0 +1,35 @@
+[
+  {
+    "claim": "The Presidential Employment Stimulus has provided 1.7 million jobs and livelihood opportunities.",
+    "status": "True",
+    "confidence": 95,
+    "category": "Economy",
+    "source": "Presidential Employment Stimulus (PES) Feb 2024 Update",
+    "date": "2024-02-08",
+    "transcript": "The Presidential Employment Stimulus has provided 1.7 million jobs...",
+    "evidence": "Verified by Africa Check",
+    "related": "Job creation claims from 2023 SONA"
+  },
+  {
+    "claim": "Our economy today is three times larger than what it was 30 years ago.",
+    "status": "Misleading",
+    "confidence": 45,
+    "category": "Economy",
+    "source": "World Bank GDP Data (Nominal vs. Real)",
+    "date": "2024-01-15",
+    "transcript": "Our economy today is three times larger...",
+    "evidence": "Growth is closer to 1.95x when adjusted for inflation (Real GDP)",
+    "related": "Economic growth claims from 2022"
+  },
+  {
+    "claim": "Social assistance continues to be a lifeline for more than 26-million South Africans every month.",
+    "status": "Incorrect",
+    "confidence": 22,
+    "category": "Social",
+    "source": "SASSA Grant Beneficiary Data (December 2023)",
+    "date": "2024-02-08",
+    "transcript": "Social assistance continues to be...",
+    "evidence": "President confused number of grants with number of beneficiaries",
+    "related": "Social grant claims from 2023 SONA"
+  }
+]
