@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Removed <meta http-equiv="X-UA-Compatible" content="ie=edge"> - Not needed for modern browsers -->
     <title>RamoCheck | Non-Partisan Fact-Checking of President Ramaphosa</title>
     <meta name="description" content="South Africa's premier non-partisan fact-checking platform dedicated to verifying President Cyril Ramaphosa's public statements, promises, and claims.">
 
@@ -60,7 +60,7 @@
                  @apply h-2 flex-grow first:rounded-l-full last:rounded-r-full transition-all duration-300 opacity-30;
             }
             .meter-segment.active {
-                @apply opacity-100 scale-y-125;
+                @apply opacity-100 scale-y-125; /* Subtle visual pop */
             }
             /* New Truth-o-Meter Dashboard Specific Styles */
             .truth-o-meter-bar {
@@ -78,6 +78,10 @@
         }
         .high-contrast * {
             @apply border-white/50 !important;
+        }
+        /* New: Filter button default state */
+        .filter-btn {
+            @apply text-gray-700 dark:text-gray-300;
         }
     </style>
 
@@ -103,7 +107,7 @@
     <div class="relative z-10 flex flex-col min-h-screen">
         <!-- Top Verification Bar -->
         <div class="bg-sa-blue text-white text-xs py-1 text-center px-4">
-             RamoCheck adheres to the <a href="#" class="underline hover:text-sa-yellow">International Fact-Checking Network (IFCN)</a> code of principles.
+             RamoCheck adheres to the <a href="https://www.ifcncodeofprinciples.poynter.org/signatories/ramocheck" target="_blank" rel="noopener noreferrer" class="underline hover:text-sa-yellow">International Fact-Checking Network (IFCN)</a> code of principles.
         </div>
 
         <header class="sticky top-0 z-50 content-layer border-b border-gray-200/50 dark:border-gray-800/50 shadow-sm">
@@ -112,7 +116,7 @@
                     <!-- Logo Area -->
                     <a href="/" class="flex items-center group mb-4 md:mb-0">
                         <div class="relative flex items-center justify-center w-10 h-10 mr-3 bg-sa-blue rounded-xl text-white overflow-hidden shadow-inner">
-                            <i data-feather="check-circle" class="w-6 h-6 relative z-10"></i>
+                            <i data-feather="check-circle" class="w-6 h-6 relative z-10" aria-hidden="true"></i>
                             <div class="absolute inset-0 bg-gradient-to-tr from-sa-green to-transparent opacity-50"></div>
                         </div>
                         <div>
@@ -123,7 +127,7 @@
                     
                     <!-- Desktop Nav -->
                     <nav class="hidden lg:flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full text-sm font-medium">
-                        <a href="#recent-facts" class="px-4 py-1.5 rounded-full bg-white dark:bg-gray-700 shadow-sm text-sa-blue">Fact-Checks</a>
+                        <a href="#recent-facts" class="px-4 py-1.5 rounded-full bg-white dark:bg-gray-700 shadow-sm text-sa-blue" aria-current="page">Fact-Checks</a>
                         <a href="#track-record" class="px-4 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">Track Record</a>
                         <a href="#methodology" class="px-4 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">Methodology</a>
                         <a href="#africa-check" class="px-4 py-1.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">Africa Check</a>
@@ -132,25 +136,30 @@
 
                     <!-- Utilities -->
                     <div class="flex items-center gap-3">
-                         <!-- Search (Simulated) -->
+                        <!-- Search (Simulated) -->
                         <div class="hidden md:flex relative group">
-                            <input type="text" placeholder="Search 1,248 claims..." class="pl-9 pr-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 border-transparent focus:border-sa-blue rounded-lg w-48 focus:w-64 transition-all duration-300">
-                            <i data-feather="search" class="absolute left-2.5 top-2.5 text-gray-400 w-4 h-4"></i>
+                            <input type="text" placeholder="Search 1,248 claims..." class="pl-9 pr-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 border-transparent focus:border-sa-blue rounded-lg w-48 focus:w-64 transition-all duration-300" aria-label="Search claims">
+                            <i data-feather="search" class="absolute left-2.5 top-2.5 text-gray-400 w-4 h-4" aria-hidden="true"></i>
                         </div>
 
                         <!-- Dark/Contrast Toggles -->
                         <div class="flex border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                            <button id="dark-mode-toggle" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition" aria-label="Toggle Dark Mode">
-                                <i data-feather="moon" class="w-4 h-4"></i>
+                            <button id="dark-mode-toggle" type="button" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition" aria-label="Toggle Dark Mode">
+                                <i data-feather="moon" class="w-4 h-4" aria-hidden="true"></i>
                             </button>
                             <div class="w-px bg-gray-200 dark:bg-gray-700"></div>
-                            <button id="contrast-toggle" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition" aria-label="Toggle High Contrast">
-                                <i data-feather="sun" class="w-4 h-4"></i>
+                            <button id="contrast-toggle" type="button" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition" aria-label="Toggle High Contrast">
+                                <i data-feather="sun" class="w-4 h-4" aria-hidden="true"></i>
                             </button>
                         </div>
                         
+                        <!-- Mobile Nav Toggle (Hamburger) - Hidden on large screens -->
+                        <button type="button" class="lg:hidden p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition" aria-label="Open navigation menu">
+                            <i data-feather="menu" class="w-5 h-5"></i>
+                        </button>
+
                         <a href="#submit" class="hidden sm:flex bg-sa-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold items-center transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                            <i data-feather="plus" class="mr-2 w-4 h-4"></i> Submit Claim
+                            <i data-feather="plus" class="mr-2 w-4 h-4" aria-hidden="true"></i> Submit Claim
                         </a>
                     </div>
                 </div>
@@ -180,19 +189,19 @@
                         <!-- Main Search Bar -->
                         <div class="max-w-2xl mx-auto relative mb-12">
                              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i data-feather="search" class="h-6 w-6 text-gray-400"></i>
+                                <i data-feather="search" class="h-6 w-6 text-gray-400" aria-hidden="true"></i>
                             </div>
-                            <input type="text" class="w-full p-5 pl-12 text-lg rounded-2xl border-2 border-gray-200 dark:border-gray-700 focus:ring-4 focus:ring-sa-blue/20 focus:border-sa-blue shadow-2xl transition-all dark:bg-gray-800 dark:text-white" placeholder="Try searching 'load shedding' or 'employment rate'...">
-                            <button class="absolute right-3 top-3 bg-sa-blue text-white p-3 rounded-xl font-bold hover:bg-blue-700 transition hidden sm:block">
+                            <input type="text" class="w-full p-5 pl-12 text-lg rounded-2xl border-2 border-gray-200 dark:border-gray-700 focus:ring-4 focus:ring-sa-blue/20 focus:border-sa-blue shadow-2xl transition-all dark:bg-gray-800 dark:text-white" placeholder="Try searching 'load shedding' or 'employment rate'..." aria-label="Search all claims">
+                            <button type="button" class="absolute right-3 top-3 bg-sa-blue text-white p-3 rounded-xl font-bold hover:bg-blue-700 transition hidden sm:block">
                                 Verify
                             </button>
                         </div>
 
                         <!-- Trust Badges -->
                         <div class="flex flex-wrap justify-center gap-8 items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                            <img src="https://placehold.co/120x40?text=Africa+Check" alt="Partner: Africa Check">
-                            <img src="https://placehold.co/120x40?text=Press+Council" alt="Member: Press Council">
-                            <img src="https://placehold.co/120x40?text=Sanef" alt="Member: SANEF">
+                            <img src="https://placehold.co/120x40?text=Africa+Check" alt="Partner: Africa Check" loading="lazy">
+                            <img src="https://placehold.co/120x40?text=Press+Council" alt="Member: Press Council" loading="lazy">
+                            <img src="https://placehold.co/120x40?text=Sanef" alt="Member: SANEF" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -208,14 +217,14 @@
                                 Our cumulative analysis of 1,248 verifiable statements since 2018. This data is updated weekly following major public addresses.
                             </p>
                             <a href="#full-report" class="inline-flex items-center text-sa-blue font-bold hover:underline">
-                                Download 2024 Annual Report <i data-feather="arrow-right" class="ml-2 w-4 h-4"></i>
+                                Download 2024 Annual Report <i data-feather="arrow-right" class="ml-2 w-4 h-4" aria-hidden="true"></i>
                             </a>
                         </div>
                         <div class="lg:w-2/3 w-full">
                             <!-- NEW: Interactive "Truth-o-Meter" Dashboard -->
                             <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 mb-8 shadow-inner">
                                 <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-                                    <i data-feather="bar-chart-2" class="w-6 h-6 mr-2 text-sa-blue"></i> Overall Truth-o-Meter
+                                    <i data-feather="bar-chart-2" class="w-6 h-6 mr-2 text-sa-blue" aria-hidden="true"></i> Overall Truth-o-Meter
                                 </h3>
                                 <div class="space-y-4">
                                     <div>
@@ -263,7 +272,7 @@
                                 <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl border-l-4 border-rating-true">
                                     <div class="flex justify-between items-start mb-4">
                                         <span class="text-rating-true bg-rating-true/10 px-2 py-1 rounded-md text-xs font-bold uppercase">True</span>
-                                        <i data-feather="check" class="text-rating-true w-5 h-5"></i>
+                                        <i data-feather="check" class="text-rating-true w-5 h-5" aria-hidden="true"></i>
                                     </div>
                                     <p class="text-4xl font-black text-gray-900 dark:text-white">60.1%</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">750 claims verified</p>
@@ -272,7 +281,7 @@
                                 <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl border-l-4 border-rating-mostly-true">
                                     <div class="flex justify-between items-start mb-4">
                                         <span class="text-rating-mostly-true bg-rating-mostly-true/10 px-2 py-1 rounded-md text-xs font-bold uppercase">Mostly True</span>
-                                        <i data-feather="thumbs-up" class="text-rating-mostly-true w-5 h-5"></i>
+                                        <i data-feather="thumbs-up" class="text-rating-mostly-true w-5 h-5" aria-hidden="true"></i>
                                     </div>
                                     <p class="text-4xl font-black text-gray-900 dark:text-white">16.5%</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">206 claims verified</p>
@@ -281,7 +290,7 @@
                                 <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl border-l-4 border-rating-misleading">
                                     <div class="flex justify-between items-start mb-4">
                                         <span class="text-rating-misleading bg-rating-misleading/10 px-2 py-1 rounded-md text-xs font-bold uppercase">Misleading</span>
-                                        <i data-feather="alert-triangle" class="text-rating-misleading w-5 h-5"></i>
+                                        <i data-feather="alert-triangle" class="text-rating-misleading w-5 h-5" aria-hidden="true"></i>
                                     </div>
                                     <p class="text-4xl font-black text-gray-900 dark:text-white">10.5%</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">131 claims verified</p>
@@ -290,7 +299,7 @@
                                 <div class="p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl border-l-4 border-rating-false">
                                     <div class="flex justify-between items-start mb-4">
                                         <span class="text-rating-false bg-rating-false/10 px-2 py-1 rounded-md text-xs font-bold uppercase">False</span>
-                                        <i data-feather="x-octagon" class="text-rating-false w-5 h-5"></i>
+                                        <i data-feather="x-octagon" class="text-rating-false w-5 h-5" aria-hidden="true"></i>
                                     </div>
                                     <p class="text-4xl font-black text-gray-900 dark:text-white">11.9%</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">148 claims verified</p>
@@ -312,10 +321,10 @@
                         </div>
                         
                         <div class="flex flex-wrap gap-2 p-1.5 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800" id="filters">
-                            <button class="filter-btn active px-4 py-2 rounded-lg text-sm font-bold transition-all hover:bg-gray-100 dark:hover:bg-gray-800 bg-sa-blue text-white" data-filter="*">All</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-rating-true" data-filter=".true">True</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-rating-misleading" data-filter=".misleading">Misleading</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-rating-false" data-filter=".false">False</button>
+                            <button type="button" class="filter-btn active px-4 py-2 rounded-lg text-sm font-bold transition-all hover:bg-gray-100 dark:hover:bg-gray-800 bg-sa-blue text-white" data-filter="*">All</button>
+                            <button type="button" class="filter-btn px-4 py-2 rounded-lg text-sm font-bold transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-rating-true" data-filter=".true">True</button>
+                            <button type="button" class="filter-btn px-4 py-2 rounded-lg text-sm font-bold transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-rating-misleading" data-filter=".misleading">Misleading</button>
+                            <button type="button" class="filter-btn px-4 py-2 rounded-lg text-sm font-bold transition-all hover:bg-gray-100 dark:hover:bg-gray-800 text-rating-false" data-filter=".false">False</button>
                         </div>
                     </div>
 
@@ -330,7 +339,7 @@
                                 <!-- Rating Header -->
                                 <div class="bg-rating-false text-white px-6 py-3 flex justify-between items-center">
                                     <div class="flex items-center gap-2">
-                                        <i data-feather="x-circle" class="w-5 h-5"></i>
+                                        <i data-feather="x-circle" class="w-5 h-5" aria-hidden="true"></i>
                                         <span class="font-black uppercase tracking-wider text-sm">False</span>
                                     </div>
                                     <span class="text-white/80 text-xs font-mono">ECONOMY</span>
@@ -340,14 +349,14 @@
                                     <!-- The Claim -->
                                     <div class="mb-6">
                                         <div class="flex gap-3 mb-3">
-                                            <img src="/api/placeholder/40/40" alt="Ramaphosa" class="w-10 h-10 rounded-full border-2 border-sa-yellow p-0.5">
+                                            <img src="/api/placeholder/40/40" alt="President Ramaphosa profile picture" class="w-10 h-10 rounded-full border-2 border-sa-yellow p-0.5" loading="lazy">
                                             <div>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">President Ramaphosa said on <time datetime="2024-02-08">Feb 8, 2024</time>:</p>
                                                 <p class="text-xs text-gray-400">SONA Address 2024</p>
                                             </div>
                                         </div>
                                         <blockquote class="text-xl font-bold text-gray-900 dark:text-white leading-snug relative">
-                                            <span class="text-sa-blue opacity-20 absolute -top-4 -left-2 text-5xl">“</span>
+                                            <span class="text-sa-blue opacity-20 absolute -top-4 -left-2 text-5xl" aria-hidden="true">“</span>
                                             We have created 1.5 million new jobs since the start of this administration, surpassing pre-pandemic levels.
                                         </blockquote>
                                     </div>
@@ -374,7 +383,7 @@
                                             According to Stats SA QLFS data, while jobs have recovered since 2020, the total employed remains approximately 200,000 below the Q4 2019 peak when accounting for expanded definition unemployment.
                                         </p>
                                         <a href="#" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-bold rounded-lg hover:bg-rating-false hover:text-white transition-colors group-hover:ring-2 ring-rating-false/20">
-                                            Read Full Analysis <i data-feather="chevron-right" class="ml-2 w-4 h-4"></i>
+                                            Read Full Analysis <i data-feather="chevron-right" class="ml-2 w-4 h-4" aria-hidden="true"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -386,7 +395,7 @@
                             <article class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 group border border-gray-100 dark:border-gray-800 h-full flex flex-col">
                                 <div class="bg-rating-true text-white px-6 py-3 flex justify-between items-center">
                                     <div class="flex items-center gap-2">
-                                        <i data-feather="check-circle" class="w-5 h-5"></i>
+                                        <i data-feather="check-circle" class="w-5 h-5" aria-hidden="true"></i>
                                         <span class="font-black uppercase tracking-wider text-sm">Correct</span>
                                     </div>
                                     <span class="text-white/80 text-xs font-mono">HEALTH</span>
@@ -394,7 +403,7 @@
                                 <div class="p-6 flex-grow flex flex-col">
                                     <div class="mb-6">
                                         <div class="flex gap-3 mb-3">
-                                            <img src="/api/placeholder/40/40" alt="Ramaphosa" class="w-10 h-10 rounded-full border-2 border-sa-yellow p-0.5">
+                                            <img src="/api/placeholder/40/40" alt="President Ramaphosa profile picture" class="w-10 h-10 rounded-full border-2 border-sa-yellow p-0.5" loading="lazy">
                                             <div>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">President Ramaphosa said on <time datetime="2023-11-15">Nov 15, 2023</time>:</p>
                                                 <p class="text-xs text-gray-400">Media Briefing</p>
@@ -406,376 +415,4 @@
                                     </div>
                                     <div class="mb-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
                                         <div class="flex h-2.5 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-                                            <div class="meter-segment bg-rating-false w-1/5"></div>
-                                            <div class="meter-segment bg-rating-misleading w-1/5"></div>
-                                            <div class="meter-segment bg-rating-unproven w-1/5"></div>
-                                            <div class="meter-segment bg-rating-mostly-true w-1/5"></div>
-                                            <div class="meter-segment bg-rating-true active w-1/5"></div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-auto">
-                                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">The Verdict</h4>
-                                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                                            Verified by UNAIDS 2023 data. South Africa has over 5.7 million people on HIV treatment, indeed the largest absolute number globally.
-                                        </p>
-                                        <a href="#" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-bold rounded-lg hover:bg-rating-true hover:text-white transition-colors">
-                                            Read Full Analysis <i data-feather="chevron-right" class="ml-2 w-4 h-4"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-
-                        <!-- FACT CARD 3: MISLEADING -->
-                        <div class="grid-item w-full md:w-1/2 lg:w-1/3 px-4 mb-8 misleading energy">
-                            <article class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 group border border-gray-100 dark:border-gray-800 h-full flex flex-col">
-                                <div class="bg-rating-misleading text-white px-6 py-3 flex justify-between items-center">
-                                    <div class="flex items-center gap-2">
-                                        <i data-feather="alert-triangle" class="w-5 h-5"></i>
-                                        <span class="font-black uppercase tracking-wider text-sm">Misleading</span>
-                                    </div>
-                                    <span class="text-white/90 text-xs font-mono">ENERGY</span>
-                                </div>
-                                <div class="p-6 flex-grow flex flex-col">
-                                    <div class="mb-6">
-                                        <div class="flex gap-3 mb-3">
-                                            <img src="/api/placeholder/40/40" alt="Ramaphosa" class="w-10 h-10 rounded-full border-2 border-sa-yellow p-0.5">
-                                            <div>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">President Ramaphosa said on <time datetime="2023-05-20">May 20, 2023</time>:</p>
-                                                <p class="text-xs text-gray-400">Parliament Q&A</p>
-                                            </div>
-                                        </div>
-                                        <blockquote class="text-xl font-bold text-gray-900 dark:text-white leading-snug">
-                                            Load shedding is an inevitability due to aging power stations we inherited from the apartheid era.
-                                        </blockquote>
-                                    </div>
-                                    <div class="mb-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
-                                        <div class="flex h-2.5 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-                                            <div class="meter-segment bg-rating-false w-1/5"></div>
-                                            <div class="meter-segment bg-rating-misleading active w-1/5"></div>
-                                            <div class="meter-segment bg-rating-unproven w-1/5"></div>
-                                            <div class="meter-segment bg-rating-mostly-true w-1/5"></div>
-                                            <div class="meter-segment bg-rating-true w-1/5"></div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-auto">
-                                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">The Verdict</h4>
-                                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                                            While aging infrastructure is a factor, this omits critical context regarding delayed maintenance since 2008 and construction flaws in new Medupi/Kusile stations built under the current administration.
-                                        </p>
-                                        <a href="#" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-bold rounded-lg hover:bg-rating-misleading hover:text-white transition-colors">
-                                            Read Full Analysis <i data-feather="chevron-right" class="ml-2 w-4 h-4"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
-                    </div> <!-- End Grid -->
-                    
-                     <div class="text-center mt-12">
-                        <button class="bg-white dark:bg-gray-800 border-2 border-sa-blue text-sa-blue font-bold px-8 py-4 rounded-xl hover:bg-sa-blue hover:text-white transition-all flex items-center mx-auto">
-                            Load More Fact-Checks
-                            <i data-feather="loader" class="ml-3 w-5 h-5 animate-spin"></i>
-                        </button>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- NEW: AfricaCheck.org Fact Checks Section -->
-            <section id="africa-check" class="py-20 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-                <div class="container mx-auto px-4">
-                    <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
-                        <div>
-                            <h2 class="text-3xl font-black text-gray-900 dark:text-white mb-2">External Verifications: <span class="text-sa-green">Africa Check</span></h2>
-                            <p class="text-gray-600 dark:text-gray-400">Independent fact-checks related to President Ramaphosa from AfricaCheck.org.</p>
-                        </div>
-                        <a href="https://africacheck.org/search?search_api_fulltext=ramaphosa&sort_bef_combine=search_api_relevance_DESC" target="_blank" class="flex items-center text-sa-blue font-bold hover:underline">
-                            View all Africa Check results <i data-feather="external-link" class="ml-2 w-4 h-4"></i>
-                        </a>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- Simulated Africa Check Fact Card 1 -->
-                        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 flex flex-col">
-                            <div class="flex items-center gap-3 mb-4">
-                                <img src="https://placehold.co/32x32?text=AC" alt="Africa Check Logo" class="rounded-full">
-                                <span class="font-bold text-gray-700 dark:text-gray-200">Africa Check</span>
-                                <span class="ml-auto text-xs text-gray-500 dark:text-gray-400">Feb 8, 2024</span>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                President Ramaphosa's 2024 SONA address claims on economy, jobs, and social grants.
-                            </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 flex-grow mb-4">
-                                Africa Check found three claims incorrect, two understated, three misleading, and three correct regarding the 2024 State of the Nation Address. For example, Ramaphosa overstated the number of social grant beneficiaries by over six million people by mistaking grants for recipients.
-                            </p>
-                            <span class="rating-badge bg-rating-misleading text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1 self-start">
-                                <i data-feather="alert-triangle" class="w-4 h-4"></i> Mixed Verdict
-                            </span>
-                            <a href="https://africacheck.org/reports/democracys-child-fact-checking-south-african-president-cyril-ramaphosas-2024-state-of-the-nation-address/19082" target="_blank" class="mt-4 inline-flex items-center text-sa-blue font-bold hover:underline text-sm">
-                                Read Full Report <i data-feather="external-link" class="ml-1 w-3 h-3"></i>
-                            </a>
-                        </article>
-
-                        <!-- Simulated Africa Check Fact Card 2 -->
-                        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 flex flex-col">
-                            <div class="flex items-center gap-3 mb-4">
-                                <img src="https://placehold.co/32x32?text=AC" alt="Africa Check Logo" class="rounded-full">
-                                <span class="font-bold text-gray-700 dark:text-gray-200">Africa Check</span>
-                                <span class="ml-auto text-xs text-gray-500 dark:text-gray-400">Nov 14, 2019</span>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                Fact-Checked: President Ramaphosa's claims about progress in South Africa since 1994.
-                            </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 flex-grow mb-4">
-                                While Ramaphosa was correct about the economy and electrified households, his claims on university enrollment were not fully supported and data on inequality was hard to prove.
-                            </p>
-                            <span class="rating-badge bg-rating-unproven text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1 self-start">
-                                <i data-feather="help-circle" class="w-4 h-4"></i> Mixed Verdict
-                            </span>
-                            <a href="https://africacheck.org/reports/fact-checked-president-cyril-ramaphosas-claims-about-progress-in-south-africa-since-1994/9769" target="_blank" class="mt-4 inline-flex items-center text-sa-blue font-bold hover:underline text-sm">
-                                Read Full Report <i data-feather="external-link" class="ml-1 w-3 h-3"></i>
-                            </a>
-                        </article>
-
-                        <!-- Simulated Africa Check Fact Card 3 -->
-                        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 flex flex-col">
-                            <div class="flex items-center gap-3 mb-4">
-                                <img src="https://placehold.co/32x32?text=AC" alt="Africa Check Logo" class="rounded-full">
-                                <span class="font-bold text-gray-700 dark:text-gray-200">Africa Check</span>
-                                <span class="ml-auto text-xs text-gray-500 dark:text-gray-400">Feb 20, 2018</span>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                Ramaphosa right about 'big difference' between black & white unemployment in SA.
-                            </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 flex-grow mb-4">
-                                In response to concerns about white youth exclusion, Ramaphosa correctly stated that unemployment among Africans was 30% and just under 7% for white people in Q4 2017.
-                            </p>
-                            <span class="rating-badge bg-rating-true text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1 self-start">
-                                <i data-feather="check-circle" class="w-4 h-4"></i> Correct
-                            </span>
-                            <a href="https://africacheck.org/reports/ramaphosa-right-big-difference-between-black-white-unemployment-sa/3983" target="_blank" class="mt-4 inline-flex items-center text-sa-blue font-bold hover:underline text-sm">
-                                Read Full Report <i data-feather="external-link" class="ml-1 w-3 h-3"></i>
-                            </a>
-                        </article>
-                    </div>
-                    <p class="mt-8 text-sm text-gray-600 dark:text-gray-400 text-center italic">
-                        <i data-feather="info" class="inline-block w-4 h-4 mr-1"></i> Note: Live fetching of external fact-checks directly in client-side HTML is restricted by browser security policies (CORS). These examples are illustrative.
-                    </p>
-                </div>
-            </section>
-            <!-- END NEW: AfricaCheck.org Fact Checks Section -->
-
-            <!-- NEW: Social Media Pulse Widget -->
-            <section id="social-pulse" class="py-20 bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
-                <div class="container mx-auto px-4">
-                    <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
-                        <div>
-                            <h2 class="text-3xl font-black text-gray-900 dark:text-white mb-2">Social Media Pulse</h2>
-                            <p class="text-gray-600 dark:text-gray-400">What people are saying about President Ramaphosa on social media platforms.</p>
-                        </div>
-                        <div class="flex items-center text-gray-700 dark:text-gray-300 font-bold">
-                            Overall Sentiment: 
-                            <span class="ml-2 text-xl font-black text-rating-misleading flex items-center">
-                                <i data-feather="meh" class="w-5 h-5 mr-1"></i> Mixed
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- Simulated Social Media Post 1 (X/Twitter) -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center mb-4">
-                                <img src="/api/placeholder/36/36?text=X" alt="X Logo" class="rounded-full mr-3">
-                                <div>
-                                    <p class="font-bold text-gray-900 dark:text-white">@SA_Citizen</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">X (formerly Twitter) · 2 hours ago</p>
-                                </div>
-                                <i data-feather="twitter" class="ml-auto w-5 h-5 text-blue-400"></i>
-                            </div>
-                            <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                                "The progress on infrastructure mentioned by Ramaphosa is visible, finally seeing some tangible results in my community."
-                            </p>
-                            <span class="rating-badge bg-rating-true text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1">
-                                <i data-feather="smile" class="w-4 h-4"></i> Positive
-                            </span>
-                        </div>
-
-                        <!-- Simulated Social Media Post 2 (Facebook) -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center mb-4">
-                                <img src="/api/placeholder/36/36?text=FB" alt="Facebook Logo" class="rounded-full mr-3">
-                                <div>
-                                    <p class="font-bold text-gray-900 dark:text-white">CommunityVoicesSA</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Facebook · 5 hours ago</p>
-                                </div>
-                                <i data-feather="facebook" class="ml-auto w-5 h-5 text-blue-600"></i>
-                            </div>
-                            <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                                "Still waiting for concrete action on job creation. Promises are great, but livelihoods are still struggling. #LoadsheddingMustFall"
-                            </p>
-                            <span class="rating-badge bg-rating-false text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1">
-                                <i data-feather="frown" class="w-4 h-4"></i> Negative
-                            </span>
-                        </div>
-
-                        <!-- Simulated Social Media Post 3 (TikTok) -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center mb-4">
-                                <img src="/api/placeholder/36/36?text=TK" alt="TikTok Logo" class="rounded-full mr-3">
-                                <div>
-                                    <p class="font-bold text-gray-900 dark:text-white">@MzansiYouthViews</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">TikTok · 1 day ago</p>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="ml-auto w-5 h-5 text-black dark:text-white"><path d="M12.015 15.148c-1.666 0-2.404-.972-2.404-2.585V7.126h-2.13C6.711 7.424 6 8.356 6 9.873v4.613c0 3.328 3.515 6.012 7.848 6.012 4.148 0 7.52-2.316 7.52-5.733 0-3.149-2.903-5.385-6.07-5.556v2.164c1.996.182 3.553.847 3.553 2.973 0 1.846-1.745 2.94-4.821 2.94zm-1.04-8.865v4.204c0 .356.027.653.054.912.035.148.062.257.072.316h-.062c-.01-.06-.037-.168-.073-.316a12.034 12.034 0 01-.053-.912V6.283c.01-.24.08-.415.228-.564.129-.129.287-.193.473-.193.205 0 .37.077.49.232.12.155.18.375.18.66zm.053-.005h-.053c-.01-.06-.037-.168-.073-.316a12.034 12.034 0 01-.053-.912V6.283c.01-.24.08-.415.228-.564.129-.129.287-.193.473-.193.205 0 .37.077.49.232.12.155.18.375.18.66z"/></svg>
-                            </div>
-                            <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                                "The youth unemployment numbers are worrying, we need more than just promises for a better future. #SouthAfrica #Youth"
-                            </p>
-                            <span class="rating-badge bg-rating-false text-white text-xs font-bold uppercase tracking-wider inline-flex items-center gap-1">
-                                <i data-feather="meh-n" class="w-4 h-4"></i> Critical
-                            </span>
-                        </div>
-                    </div>
-                    <p class="mt-8 text-sm text-gray-600 dark:text-gray-400 text-center italic">
-                        <i data-feather="info" class="inline-block w-4 h-4 mr-1"></i> Note: This widget shows illustrative content. Real-time social media sentiment analysis and data aggregation require advanced APIs and backend processing.
-                    </p>
-                </div>
-            </section>
-            <!-- END NEW: Social Media Pulse Widget -->
-
-        </main>
-
-        <footer class="bg-gray-900 text-gray-400 py-16 border-t-4 border-sa-yellow">
-            <div class="container mx-auto px-4">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                    <div class="col-span-1 md:col-span-2">
-                         <h2 class="text-white text-2xl font-black mb-4">Ramo<span class="text-sa-blue">Check</span></h2>
-                         <p class="mb-6 max-w-sm">Promoting political accountability and evidence-based public discourse in South Africa through rigorous, non-partisan fact-checking.</p>
-                         <div class="flex gap-4">
-                             <a href="#" class="text-white hover:text-sa-blue transition"><i data-feather="twitter"></i></a>
-                             <a href="#" class="text-white hover:text-sa-blue transition"><i data-feather="facebook"></i></a>
-                             <a href="#" class="text-white hover:text-sa-blue transition"><i data-feather="mail"></i></a>
-                         </div>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Transparency</h4>
-                        <ul class="space-y-3 text-sm">
-                            <li><a href="#" class="hover:text-white transition">Our Funding Sources</a></li>
-                            <li><a href="#" class="hover:text-white transition">Methodology Detailed</a></li>
-                            <li><a href="#" class="hover:text-white transition">Corrections Policy</a></li>
-                            <li><a href="#" class="hover:text-white transition">Meet the Team</a></li>
-                        </ul>
-                    </div>
-                     <div>
-                        <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Legal</h4>
-                        <ul class="space-y-3 text-sm">
-                            <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
-                            <li><a href="#" class="hover:text-white transition">Terms of Use</a></li>
-                            <li><a href="#" class="hover:text-white transition">PAIA Manual</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs">
-                    <p>© 2024 RamoCheck ZA. Non-profit organization NPO 123-456.</p>
-                    <p class="mt-4 md:mt-0">Built for Mzansi 🇿🇦</p>
-                </div>
-            </div>
-        </footer>
-
-    </div>
-
-    <!-- Scripts: Optimized Loading Order -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
-
-    <script>
-        // 1. Initialize Icons
-        feather.replace();
-
-        // 2. State-of-the-Art Vanta Background (with performance guards)
-        if (window.innerWidth > 768 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-             VANTA.GLOBE({
-                el: "#vanta-bg",
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                scale: 1.00,
-                scaleMobile: 1.00,
-                color: 0x0047AB,    // SA Blue
-                color2: 0xE03C31,   // SA Red (secondary accent)
-                backgroundColor: 0xffffff, // Default light
-                size: 0.8
-            });
-        }
-
-        // 3. Robust Dark Mode Toggle with LocalStorage and Vanta awareness
-        const htmlEl = document.documentElement;
-        const toggle = document.getElementById('dark-mode-toggle');
-        
-        function updateTheme(isDark) {
-            if (isDark) {
-                htmlEl.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                // If Vanta exists, we could theoretically update its background color here, 
-                // but Vanta doesn't easily support live updates without destroying/recreating.
-                // We use CSS opacity on the #vanta-bg container to handle this instead.
-            } else {
-                htmlEl.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            }
-        }
-
-        // Check preference on load
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            updateTheme(true);
-        }
-
-        toggle.addEventListener('click', () => {
-            updateTheme(!htmlEl.classList.contains('dark'));
-        });
-        
-        // Contrast Toggle
-         document.getElementById('contrast-toggle').addEventListener('click', () => {
-            document.body.classList.toggle('high-contrast');
-        });
-
-        // 4. Isotope Filtering (The "App-like" feel)
-        window.addEventListener('load', () => {
-            const grid = document.querySelector('.grid-layout');
-            const iso = new Isotope(grid, {
-                itemSelector: '.grid-item',
-                percentPosition: true,
-                masonry: {
-                    columnWidth: '.grid-sizer'
-                }
-            });
-
-            // Filter buttons
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const filterValue = e.target.getAttribute('data-filter');
-                    iso.arrange({ filter: filterValue });
-                    
-                    // Visual active state
-                    filterButtons.forEach(b => {
-                        b.classList.remove('bg-sa-blue', 'text-white');
-                         // Restore original text colors if not active
-                         if (b.dataset.filter === '.true') b.classList.add('text-rating-true');
-                         if (b.dataset.filter === '.misleading') b.classList.add('text-rating-misleading');
-                         if (b.dataset.filter === '.false') b.classList.add('text-rating-false');
-                    });
-                    
-                    e.target.classList.add('bg-sa-blue', 'text-white');
-                    e.target.classList.remove('text-rating-true', 'text-rating-misleading', 'text-rating-false');
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+                                            <
